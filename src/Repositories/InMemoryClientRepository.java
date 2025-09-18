@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class InMemoryClientRepository implements ClientRepository {
     private final Map<UUID, User> users = new HashMap<>();
-    private User CurrentUser;
+    private User SearchedForUser;
 
     public InMemoryClientRepository() {
         // Create a hardcoded admin user
@@ -32,7 +32,7 @@ public class InMemoryClientRepository implements ClientRepository {
     public User FindByEmail(String email) {
         for (User user : users.values()) { // iterate all users
             if (user.getEmail().equalsIgnoreCase(email)) {
-                this.CurrentUser = user;
+                this.SearchedForUser = user;
                 return user; // found
             }
         }

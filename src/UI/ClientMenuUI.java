@@ -2,23 +2,25 @@ package UI;
 
 import Repositories.InMemoryClientRepository;
 import Services.AuthService;
-
+import Entities.User;
 import java.util.Scanner;
 
 public class ClientMenuUI {
     private final Scanner input;
     private final InMemoryClientRepository userRepo;
     private final AuthService authService;
+    private User logged = null;
 
-    public ClientMenuUI(InMemoryClientRepository userRepo, AuthService authService, Scanner input) {
+    public ClientMenuUI(InMemoryClientRepository userRepo, AuthService authService, Scanner input, User logged) {
         this.input = input;
         this.userRepo = userRepo;
         this.authService = authService;
+        this.logged = logged;
     }
 
     public void start() {
-        boolean running = true;
-        while (running) {
+
+        while (this.logged != null) {
             System.out.println("\n=== CLIENT MENU ===");
             System.out.println("2 - List hotels");
             System.out.println("3 - Reserve a room");
@@ -27,12 +29,16 @@ public class ClientMenuUI {
             System.out.println("6 - Update profile");
             System.out.println("7 - Change password");
             System.out.println("8 - Logout");
-            System.out.println("9 - Exit");
             System.out.print("Please choose an option: ");
             // Simple input reading (no logic yet)
             int choice;
             try {
                 choice = Integer.parseInt(input.nextLine());
+                switch(choice) {
+                    case 5:
+                        System.out.println("(You succesfully logged out.)");
+                        this.logged = null;
+                }
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number between 1 and 9.");
                 continue;

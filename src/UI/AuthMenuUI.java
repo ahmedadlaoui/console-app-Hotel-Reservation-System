@@ -84,11 +84,11 @@ public class AuthMenuUI {
         User logged = authService.SignIn(email, password);
         if (logged != null && !logged.isAdmin()) {
             System.out.println("✅ Welcome, " + logged.getUsername() + "!");
-            ClientMenuUI clientmenuUI = new ClientMenuUI(this.userRepo,this.authService,this.input);
+            ClientMenuUI clientmenuUI = new ClientMenuUI(this.userRepo,this.authService,this.input,logged);
             clientmenuUI.start();
         }else if(logged != null && logged.isAdmin()){
             System.out.println("✅ Welcome, " + logged.getUsername() + "!");
-            AdminMenuUI adminmenuUI = new AdminMenuUI(this.userRepo,this.authService,this.input);
+            AdminMenuUI adminmenuUI = new AdminMenuUI(this.userRepo,this.authService,this.input,logged);
             adminmenuUI.start();
         }else {
             System.out.println("⚠️ Wrong email or password.");

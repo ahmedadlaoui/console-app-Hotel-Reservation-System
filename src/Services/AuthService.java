@@ -7,6 +7,7 @@ import Utils.PasswordValidator;
 public class AuthService {
     private final InMemoryClientRepository inMemoryClientRepository;
     private final PasswordValidator passwordValidator = new PasswordValidator();
+    private User CurrentUser = null;
 
     public AuthService(InMemoryClientRepository inMemoryClientRepository) {
         this.inMemoryClientRepository = inMemoryClientRepository;
@@ -33,10 +34,12 @@ public class AuthService {
     // Log in with email + password. Returns the User if ok, null otherwise
     public User SignIn(String email, String password) throws Exception {
         User found = inMemoryClientRepository.FindByEmail(email);
-        if (found != null && found.getPassword().equals(password)){
-                return found;
+        this.CurrentUser = found;
+        if (this.CurrentUser != null && this.CurrentUser.getPassword().equals(password)){
+                return this.CurrentUser;
         }else{
             return null;
         }
     }
+
 }
