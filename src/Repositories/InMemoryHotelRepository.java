@@ -21,4 +21,9 @@ public class InMemoryHotelRepository implements HotelRepository {
         return this.hotels.values().toArray(new Hotel[0]);
     }
     // 06 50 50 34 83
+
+    @Override
+    public Hotel FindById(UUID id) {
+        return this.hotels.get(id);
+    }
 }
