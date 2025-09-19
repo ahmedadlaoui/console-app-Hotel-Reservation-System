@@ -5,18 +5,20 @@ import Entities.User;
 import Repositories.InMemoryClientRepository;
 import Services.AuthService;
 import Services.HotelService;
+import Services.ReservationService;
 
 public class AuthMenuUI {
     private final Scanner input;
     private final InMemoryClientRepository userRepo;
     private final AuthService authService;
     private final HotelService hotelService;
-
+    private final ReservationService reservationService;
     public AuthMenuUI() {
         this.input = new Scanner(System.in);
         this.userRepo = new InMemoryClientRepository(); // single repository
         this.authService = new AuthService(userRepo);
         this.hotelService = new HotelService();
+        this.reservationService = new ReservationService();
     }
 
     public void start() throws Exception {
@@ -87,11 +89,11 @@ public class AuthMenuUI {
         User logged = authService.SignIn(email, password);
         if (logged != null && !logged.isAdmin()) {
             System.out.println("✅ Welcome, " + logged.getUsername() + "!");
-            ClientMenuUI clientmenuUI = new ClientMenuUI(this.userRepo,this.authService,this.input,logged);
+            ClientMenuUI clientmenuUI = new ClientMenuUI(this.userRepo,this.authService,this.input,logged,this.hotelService,this.reservationService);
             clientmenuUI.start();
         }else if(logged != null && logged.isAdmin()){
             System.out.println("✅ Welcome, " + logged.getUsername() + "!");
-            AdminMenuUI adminmenuUI = new AdminMenuUI(this.userRepo,this.authService,this.input,logged,this.hotelService);
+            AdminMenuUI adminmenuUI = new AdminMenuUI(this.userRepo,this.authService,this.input,logged,this.hotelService,this.reservationService);
             adminmenuUI.start();
         }else {
             System.out.println("⚠️ Wrong email or password.");

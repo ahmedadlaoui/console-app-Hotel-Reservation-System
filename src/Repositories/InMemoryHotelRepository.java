@@ -26,4 +26,9 @@ public class InMemoryHotelRepository implements HotelRepository {
     public Hotel FindById(UUID id) {
         return this.hotels.get(id);
     }
+
+    @Override
+    public void DeleteHotel(UUID id){
+        this.hotels.remove(id);
+    }
 }

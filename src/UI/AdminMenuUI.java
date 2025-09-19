@@ -1,11 +1,12 @@
 package UI;
 
 import Entities.Hotel;
+import Entities.Reservation;
 import Repositories.InMemoryClientRepository;
 import Services.AuthService;
 import Entities.User;
 import Services.HotelService;
-
+import Services.ReservationService;
 import java.util.UUID;
 import java.util.Scanner;
 
@@ -15,13 +16,15 @@ public class AdminMenuUI {
     private final AuthService authService;
     private final HotelService hotelService;
     private User logged = null;
+    private ReservationService reservationService;
 
-    public AdminMenuUI(InMemoryClientRepository userRepo, AuthService authService, Scanner input, User logged, HotelService hotelService) {
+    public AdminMenuUI(InMemoryClientRepository userRepo, AuthService authService, Scanner input, User logged, HotelService hotelService, ReservationService reservationService) {
         this.input = input;
         this.userRepo = userRepo;
         this.authService = authService;
         this.logged = logged;
         this.hotelService = hotelService;
+        this.reservationService = reservationService;
     }
 
 
@@ -93,6 +96,16 @@ public class AdminMenuUI {
                         }
                         break;
 
+                    case 4:
+                        System.out.print("Enter hotel id : ");
+                        String hotelToDeleteString = input.nextLine();
+                        try {
+                            UUID hoteToDeletelId = UUID.fromString(hotelToDeleteString);
+                            System.out.println(this.hotelService.DeleteHotel(hoteToDeletelId));
+                        } catch (IllegalArgumentException e) {
+                            System.out.println("Invalid hotel ID format.");
+                        }
+                        break;
                     case 5:
                         System.out.println("(You succesfully logged out.)");
                         this.logged = null;

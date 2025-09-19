@@ -24,17 +24,18 @@ public class HotelService {
         if (hotels == null || hotels.length == 0) {
             System.out.println("⚠️ No hotels available.");
         }
+        if(hotels.length > 0){
+            System.out.println("\n--- Hotels ---");
+            System.out.printf("%-15s | %-20s | %-6s | %-6s%n", "Name", "Address", "Rooms", "Rating");
+            System.out.println("---------------------------------------------------------------");
 
-        System.out.println("\n--- Hotels ---");
-        System.out.printf("%-15s | %-20s | %-6s | %-6s%n", "Name", "Address", "Rooms", "Rating");
-        System.out.println("---------------------------------------------------------------");
-
-        for (Hotel h : hotels) {
-            System.out.printf("%-15s | %-20s | %-6d | %-6.2f%n",
-                    h.getName(),
-                    h.getAddress(),
-                    h.getAvailableRooms(),
-                    h.getRating());
+            for (Hotel h : hotels) {
+                System.out.printf("%-15s | %-20s | %-6d | %-6.2f%n",
+                        h.getName(),
+                        h.getAddress(),
+                        h.getAvailableRooms(),
+                        h.getRating());
+            }
         }
     }
 
@@ -47,6 +48,15 @@ public class HotelService {
             hotelToUpdate.setAddress(address);
             hotelToUpdate.setAvailableRooms(rooms);
             return "Hotel updated successfully!";
+    }
+    public String DeleteHotel(UUID IDhotelToDelete) {
+        Hotel hotelToDelete = this.hotelRepository.FindById(IDhotelToDelete);
+        if(hotelToDelete != null) {
+            this.hotelRepository.DeleteHotel(IDhotelToDelete);
+            return "Hotel deleted successfully!";
+        }else{
+            return "Hotel not found!";
+        }
     }
 }
 
