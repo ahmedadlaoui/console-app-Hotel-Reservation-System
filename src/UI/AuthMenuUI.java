@@ -4,16 +4,19 @@ import java.util.Scanner;
 import Entities.User;
 import Repositories.InMemoryClientRepository;
 import Services.AuthService;
+import Services.HotelService;
 
 public class AuthMenuUI {
     private final Scanner input;
     private final InMemoryClientRepository userRepo;
     private final AuthService authService;
+    private final HotelService hotelService;
 
     public AuthMenuUI() {
         this.input = new Scanner(System.in);
         this.userRepo = new InMemoryClientRepository(); // single repository
-        this.authService = new AuthService(userRepo);   // service uses the repo
+        this.authService = new AuthService(userRepo);
+        this.hotelService = new HotelService();
     }
 
     public void start() throws Exception {
@@ -88,7 +91,7 @@ public class AuthMenuUI {
             clientmenuUI.start();
         }else if(logged != null && logged.isAdmin()){
             System.out.println("✅ Welcome, " + logged.getUsername() + "!");
-            AdminMenuUI adminmenuUI = new AdminMenuUI(this.userRepo,this.authService,this.input,logged);
+            AdminMenuUI adminmenuUI = new AdminMenuUI(this.userRepo,this.authService,this.input,logged,this.hotelService);
             adminmenuUI.start();
         }else {
             System.out.println("⚠️ Wrong email or password.");
