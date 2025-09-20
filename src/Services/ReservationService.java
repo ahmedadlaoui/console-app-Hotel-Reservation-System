@@ -41,22 +41,24 @@ public class ReservationService {
     }
 
     // Cancel a reservation
-    public boolean CancelReservation(UUID reservationId, UUID clientId) {
-        Reservation reservation = this.reservationRepo.FindById(reservationId);
+    public Reservation CancelReservation(UUID reservationId, UUID clientId,UUID hotelId) {
 
-        if (reservation == null || !reservation.getClientId().equals(clientId)) {
-            return false;
-        }
-
-        UUID SelectedHotelID = reservation.getHotelId();
-        Hotel selectedHotel = this.hotelRepo.FindById(SelectedHotelID);
-
-        if (selectedHotel != null) {
-            selectedHotel.IncrementAvailableRooms();
-        }
+        Hotel selectedHotel = this.hotelRepo.FindById(hotelId);
+        selectedHotel.IncrementAvailableRooms();
 
         this.reservationRepo.Delete(reservationId);
-        return true;
+        return this.reservationRepo.FindById(reservationId);
+
+//        if (reservation == null || !reservation.getClientId().equals(clientId)) {
+//            return false;
+//        }
+//        Hotel selectedHotel = this.hotelRepo.FindById(hotelId);
+//
+//        if (selectedHotel != null) {
+//            selectedHotel.IncrementAvailableRooms();
+//        }
+//        this.reservationRepo.Delete(reservationId);
+//        return true;
     }
 
 

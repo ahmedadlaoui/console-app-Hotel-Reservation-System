@@ -4,6 +4,8 @@ import Repositories.InMemoryClientRepository;
 import Entities.User;
 import Utils.PasswordValidator;
 
+import java.util.UUID;
+
 public class AuthService {
     private final InMemoryClientRepository inMemoryClientRepository;
     private final PasswordValidator passwordValidator = new PasswordValidator();
@@ -40,6 +42,15 @@ public class AuthService {
         }else{
             return null;
         }
+    }
+
+    public User UpdateProfile(UUID id, String NewEmail, String NewName) throws Exception {
+        User NewUserCredentials = inMemoryClientRepository.FindById(id);
+        NewUserCredentials.setEmail(NewEmail);
+        NewUserCredentials.setUsername(NewName);
+        this.inMemoryClientRepository.Save(NewUserCredentials);
+
+        return NewUserCredentials;
     }
 
 }

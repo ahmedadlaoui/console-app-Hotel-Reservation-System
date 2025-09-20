@@ -38,7 +38,15 @@ public class InMemoryClientRepository implements ClientRepository {
         }
         return null;
     }
-
+    @Override
+    public User FindById(UUID id) {
+        for (User user : users.values()) {
+            if (user.getId().equals(id)) { // UUID to UUID comparison
+                return user;
+            }
+        }
+        return null;
+    }
     public void Delete(String email) {
     }
 }

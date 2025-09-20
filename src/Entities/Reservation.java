@@ -20,23 +20,23 @@ public class Reservation {
 
     // Getters
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public Instant getTimestamp() {
-        return timestamp;
+        return this.timestamp;
     }
 
     public UUID getHotelId() {
-        return hotelId;
+        return this.hotelId;
     }
 
     public UUID getClientId() {
-        return clientId;
+        return this.clientId;
     }
 
     public int getNights() {
-        return nights;
+        return this.nights;
     }
 
     // Setters

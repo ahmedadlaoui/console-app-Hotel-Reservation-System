@@ -42,10 +42,9 @@ public class ClientMenuUI {
             System.out.println("2 - List reservations");
             System.out.println("3 - Reserve a room");
             System.out.println("4 - Cancel a reservation");
-            System.out.println("5 - Reservation history");
-            System.out.println("6 - Update profile");
-            System.out.println("7 - Change password");
-            System.out.println("8 - Logout");
+            System.out.println("5 - Update profile");
+            System.out.println("6 - Change password");
+            System.out.println("7 - Logout");
             System.out.print("Please choose an option: ");
             int choice;
             try {
@@ -67,7 +66,7 @@ public class ClientMenuUI {
                             UUID hotelId = UUID.fromString(hotelidString);
                             int numberOfNights = Integer.parseInt(NumberOfNights);
 //                            System.out.println(hotelId + " " + numberOfNights);
-                            Reservation ReservationMade = this.reservationService.MakeReservation(logged.getId(), hotelId, numberOfNights);
+                            Reservation ReservationMade = this.reservationService.MakeReservation(this.logged.getId(), hotelId, numberOfNights);
                             System.out.println("You successfully reserved a room. reservation ID : " + ReservationMade);
 
                         } catch (IllegalArgumentException e) {
@@ -79,17 +78,30 @@ public class ClientMenuUI {
                         String IdReservationToCancelString = input.nextLine();
                         try {
                             UUID IdReservationToCancel = UUID.fromString(IdReservationToCancelString);
-                            boolean ResultOfCancelation = this.reservationService.CancelReservation( IdReservationToCancel, logged.getId());
-                            if(ResultOfCancelation){
-                                System.out.println("Reservation Cancelled successfully! ");
-                            }else{
-                                System.out.println("No reservation registered under this ID .");
-                            }
+                            Reservation ResultOfCancelation = this.reservationService.CancelReservation(IdReservationToCancel,this.logged.getId(),this.reservationService.FindReservationById(IdReservationToCancel).getHotelId());
+//                            if(ResultOfCancelation != null){
+                                System.out.println("Reservation Cancelled successfully! " +  ResultOfCancelation);
+//                            }else{
+//                                System.out.println("No reservation registered under this ID .");
+//                            }
                         } catch (IllegalArgumentException e) {
                             System.out.println("Invalid Reservation ID");
                         }
                         break;
-                    case 8:
+                    case 5:
+                        System.out.print("Please enter new email :");
+                        String newEmailString = input.nextLine();
+                        System.out.print("Enter new name :");
+                        String newNameString = input.nextLine();
+
+                        User NewUserCredentials = this.authService.UpdateProfile(this.logged.getId(),newEmailString, newNameString);
+
+                        System.out.println("You successfully updated profile.");
+                        System.out.println("New email : " + NewUserCredentials.getEmail());
+                        System.out.println("New name  : " + NewUserCredentials.getUsername());
+                        break;
+
+                    case 7:
                         System.out.println("(You successfully logged out.)");
                         this.logged = null;
                         break;
@@ -97,6 +109,8 @@ public class ClientMenuUI {
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a number between 1 and 9.");
                 continue;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
 
             System.out.println("You chose option: " + choice);
