@@ -1,53 +1,79 @@
 package Services;
 
+import Entities.Hotel;
 import Entities.Reservation;
+import Repositories.InMemoryHotelRepository;
 import Repositories.InMemoryReservationRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public class ReservationService {
     private final InMemoryReservationRepository reservationRepo;
+    private final InMemoryHotelRepository hotelRepo;
 
-    public ReservationService() {
-        this.reservationRepo = new InMemoryReservationRepository();
+    public ReservationService(InMemoryHotelRepository hotelRepo,InMemoryReservationRepository reservationRepo) {
+        this.reservationRepo = reservationRepo;
+        this.hotelRepo = hotelRepo;
     }
 
     // Make a new reservation
     public Reservation MakeReservation(UUID clientId, UUID hotelId, int nights) {
-        Reservation reservation = new Reservation(// reservation ID
+
+        Hotel SelectedHotel = this.hotelRepo.FindById(hotelId);
+        if (SelectedHotel == null) {
+            System.out.println("Hotel Not Found");
+            return null;
+        }
+        if (SelectedHotel.getAvailableRooms() == 0) {
+            System.out.println("No Rooms Available in this Hotel");
+            return null;
+        }
+        Reservation reservation = new Reservation(
                 clientId,
                 hotelId,
                 nights
         );
-        reservationRepo.Save(reservation);
+        SelectedHotel.DecrementAvailableRooms();
+        this.reservationRepo.Save(reservation);
         return reservation;
     }
 
     // Cancel a reservation
     public boolean CancelReservation(UUID reservationId, UUID clientId) {
-        Reservation reservation = reservationRepo.FindById(reservationId);
-        if (reservation != null && reservation.getClientId().equals(clientId)) {
-            reservationRepo.Delete(reservationId);
-            return true;
+        Reservation reservation = this.reservationRepo.FindById(reservationId);
+
+        if (reservation == null || !reservation.getClientId().equals(clientId)) {
+            return false;
         }
-        return false;
+
+        UUID SelectedHotelID = reservation.getHotelId();
+        Hotel selectedHotel = this.hotelRepo.FindById(SelectedHotelID);
+
+        if (selectedHotel != null) {
+            selectedHotel.IncrementAvailableRooms();
+        }
+
+        this.reservationRepo.Delete(reservationId);
+        return true;
     }
+
 
     // Get all reservations for a specific client
     public Reservation[] GetReservationsByClient(UUID clientId) {
-        return reservationRepo.FindByClientId(clientId);
+        return this.reservationRepo.FindByClientId(clientId);
     }
 
     // Get a single reservation by ID
     public Reservation FindReservationById(UUID reservationId) {
-        return reservationRepo.FindById(reservationId);
+        return this.reservationRepo.FindById(reservationId);
     }
 
     public void DisplayReservationsByClient(UUID clientId) {
-        Reservation[] reservations = GetReservationsByClient(clientId);
+        Reservation[] reservations = this.GetReservationsByClient(clientId);
 
-        if (reservations.length == 0) {
+        if ( reservations == null || reservations.length == 0 ) {
             System.out.println("No reservations found for this client.");
             return;
         }
@@ -57,12 +83,13 @@ public class ReservationService {
         System.out.println("---------------------------------------------------------------------");
 
         for (Reservation r : reservations) {
-            System.out.printf("%-20s | %-20s | %-6d | %-20s%n",
+            System.out.printf("%-40s | %-36s | %-6d | %-25s%n",
                     r.getId(),
                     r.getHotelId(),
                     r.getNights(),
                     r.getTimestamp()
             );
+
         }
     }
 }

@@ -8,8 +8,8 @@ import java.util.UUID;
 public class HotelService {
     private final HotelRepository hotelRepository;
 
-    public HotelService() {
-        this.hotelRepository = new InMemoryHotelRepository();
+    public HotelService(HotelRepository hotelRepository) {
+        this.hotelRepository =hotelRepository;
     }
 
 
@@ -23,21 +23,24 @@ public class HotelService {
     public void displayHotels(Hotel[] hotels) {
         if (hotels == null || hotels.length == 0) {
             System.out.println("⚠️ No hotels available.");
+            return;
         }
-        if(hotels.length > 0){
-            System.out.println("\n--- Hotels ---");
-            System.out.printf("%-15s | %-20s | %-6s | %-6s%n", "Name", "Address", "Rooms", "Rating");
-            System.out.println("---------------------------------------------------------------");
 
-            for (Hotel h : hotels) {
-                System.out.printf("%-15s | %-20s | %-6d | %-6.2f%n",
-                        h.getName(),
-                        h.getAddress(),
-                        h.getAvailableRooms(),
-                        h.getRating());
-            }
+        System.out.println("\n--- Hotels ---");
+        System.out.printf("%-36s | %-15s | %-20s | %-6s | %-6s%n",
+                "Hotel ID", "Name", "Address", "Rooms", "Rating");
+        System.out.println("-------------------------------------------------------------------------------------------");
+
+        for (Hotel h : hotels) {
+            System.out.printf("%-36s | %-15s | %-20s | %-6d | %-6.2f%n",
+                    h.getHotelId().toString(),
+                    h.getName(),
+                    h.getAddress(),
+                    h.getAvailableRooms(),
+                    h.getRating());
         }
     }
+
 
     public Hotel CheckIfexistsHotel(UUID hotelid) {
         return this.hotelRepository.FindById(hotelid);

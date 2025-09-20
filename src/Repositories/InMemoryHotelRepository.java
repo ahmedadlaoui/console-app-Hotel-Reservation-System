@@ -2,14 +2,23 @@ package Repositories;
 import Repositories.HotelRepository;
 
 import Entities.Hotel;
-import Entities.User;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public class InMemoryHotelRepository implements HotelRepository {
     private final Map<UUID, Hotel> hotels = new HashMap<>();
+
+    public InMemoryHotelRepository() {
+        // Hardcoded hotel for testing
+        Hotel testHotel = new Hotel(
+                "Test Hotel",
+                "123 Main Street",
+                10,
+                0.00
+        );
+        this.hotels.put(testHotel.getHotelId(), testHotel);
+    }
 
     @Override
     public void Save(Hotel hotel) {
@@ -20,7 +29,6 @@ public class InMemoryHotelRepository implements HotelRepository {
     public Hotel[] FindAll() {
         return this.hotels.values().toArray(new Hotel[0]);
     }
-    // 06 50 50 34 83
 
     @Override
     public Hotel FindById(UUID id) {

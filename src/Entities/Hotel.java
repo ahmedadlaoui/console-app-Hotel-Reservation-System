@@ -55,6 +55,12 @@ public class Hotel {
             throw new IllegalArgumentException("Available rooms cannot be negative");
         }
     }
+    public void IncrementAvailableRooms(){
+        this.availableRooms++;
+    }
+    public void DecrementAvailableRooms(){
+        this.availableRooms--;
+    }
 
     public void setRating(double rating) {
         if (rating >= 0 && rating <= 5) {

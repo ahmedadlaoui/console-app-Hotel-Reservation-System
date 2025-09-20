@@ -1,13 +1,19 @@
 package Repositories;
 
+import Entities.Hotel;
 import Entities.Reservation;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class InMemoryReservationRepository implements ReservationRepository {
     private final Map<UUID, Reservation> reservations = new HashMap<>();
+
+    public InMemoryReservationRepository() {
+        System.out.println("InMemoryReservationRepository instance created: " + this);
+    }
 
     @Override
     public void Save(Reservation reservation) {
@@ -31,10 +37,7 @@ public class InMemoryReservationRepository implements ReservationRepository {
 
     @Override
     public Reservation[] FindByClientId(UUID clientId) {
-        return this.reservations.values()
-                .stream()
-                .filter(r -> r.getClientId().equals(clientId))
-                .toArray(Reservation[]::new);
+        return this.reservations.values().toArray(new Reservation[0]);
     }
 
     @Override

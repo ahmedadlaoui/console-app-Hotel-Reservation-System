@@ -1,8 +1,12 @@
 package UI;
 
 import java.util.Scanner;
+
+import Entities.Hotel;
 import Entities.User;
 import Repositories.InMemoryClientRepository;
+import Repositories.InMemoryHotelRepository;
+import Repositories.InMemoryReservationRepository;
 import Services.AuthService;
 import Services.HotelService;
 import Services.ReservationService;
@@ -13,12 +17,16 @@ public class AuthMenuUI {
     private final AuthService authService;
     private final HotelService hotelService;
     private final ReservationService reservationService;
+    private final InMemoryHotelRepository hotelRepository;
+    private final InMemoryReservationRepository reservationRepository;
     public AuthMenuUI() {
         this.input = new Scanner(System.in);
         this.userRepo = new InMemoryClientRepository(); // single repository
         this.authService = new AuthService(userRepo);
-        this.hotelService = new HotelService();
-        this.reservationService = new ReservationService();
+        this.hotelRepository = new InMemoryHotelRepository();
+        this.reservationRepository =  new InMemoryReservationRepository();
+        this.hotelService = new HotelService(this.hotelRepository);
+        this.reservationService = new ReservationService(this.hotelRepository,this.reservationRepository);
     }
 
     public void start() throws Exception {
@@ -89,7 +97,7 @@ public class AuthMenuUI {
         User logged = authService.SignIn(email, password);
         if (logged != null && !logged.isAdmin()) {
             System.out.println("✅ Welcome, " + logged.getUsername() + "!");
-            ClientMenuUI clientmenuUI = new ClientMenuUI(this.userRepo,this.authService,this.input,logged,this.hotelService,this.reservationService);
+            ClientMenuUI clientmenuUI = new ClientMenuUI(this.userRepo,this.authService,this.input,logged,this.hotelService,this.reservationService,this.hotelRepository,this.reservationRepository);
             clientmenuUI.start();
         }else if(logged != null && logged.isAdmin()){
             System.out.println("✅ Welcome, " + logged.getUsername() + "!");

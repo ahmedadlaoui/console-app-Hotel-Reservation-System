@@ -1,6 +1,8 @@
 package Repositories;
 
 import Entities.Reservation;
+
+import java.util.List;
 import java.util.UUID;
 
 public interface ReservationRepository {
@@ -16,4 +18,5 @@ public interface ReservationRepository {
     Reservation[] FindByClientId(UUID clientId);
 
     Reservation[] FindByHotelId(UUID hotelId);
+
 }
