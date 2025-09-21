@@ -52,5 +52,13 @@ public class AuthService {
 
         return NewUserCredentials;
     }
-
+    public Boolean UpdatePassword(User user, String newPassword) {
+        if (this.passwordValidator.validate(newPassword)) {
+            user.setPassword(newPassword);
+            this.inMemoryClientRepository.Save(user);
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

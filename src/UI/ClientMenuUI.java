@@ -100,7 +100,16 @@ public class ClientMenuUI {
                         System.out.println("New email : " + NewUserCredentials.getEmail());
                         System.out.println("New name  : " + NewUserCredentials.getUsername());
                         break;
-
+                    case 6:
+                        System.out.print("Please enter new password :");
+                        String newPasswordString = input.nextLine();
+                        Boolean results = this.authService.UpdatePassword(this.logged,newPasswordString);
+                        if(results){
+                            System.out.println("You successfully updated password.");
+                        }else{
+                            System.out.println("Invalid Password. Try again.");
+                        }
+                        break;
                     case 7:
                         System.out.println("(You successfully logged out.)");
                         this.logged = null;
